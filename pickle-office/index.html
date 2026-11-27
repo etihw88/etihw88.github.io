@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>슬기로운에듀라이프 합동 비서실</title>
+<meta name="description" content="슬기로운에듀라이프 합동 비서실 — 오피스 맵과 비서실 채팅 미리보기">
+<meta name="theme-color" content="#FFF7EF">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23FFB7C7'/%3E%3Ccircle cx='36' cy='48' r='7' fill='%23fff'/%3E%3Ccircle cx='64' cy='48' r='7' fill='%23fff'/%3E%3Cpath d='M40 66q10 9 20 0' stroke='%23F0913F' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF8F1;
+    --wall:#FFF2E6;
+    --card:#FFFFFF;
+    --ink:#5A453A;
+    --ink-soft:#94806F;
+    --line:#F2E2D2;
+    --pink:#FFB7C7;
+    --pink-deep:#F98FA6;
+    --orange:#F7A45C;
+    --orange-soft:#FFDCB2;
+    --wood:#EBCDA9;
+    --mint:#9FD8C0;
+    --shadow:0 14px 30px rgba(184,140,104,.10);
+    --shadow-soft:0 6px 16px rgba(184,140,104,.09);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Gowun Dodum","Apple SD Gothic Neo","Pretendard",system-ui,-apple-system,"Malgun Gothic",sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(900px 520px at 12% -8%, #FFE9D8 0%, rgba(255,233,216,0) 62%),
+      radial-gradient(760px 480px at 100% 0%, #FFE3EA 0%, rgba(255,227,234,0) 58%),
+      radial-gradient(700px 500px at 50% 110%, #FFF1E0 0%, rgba(255,241,224,0) 60%),
+      var(--cream);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 40px}
+  @media(min-width:760px){ .wrap{padding:28px 24px 56px} }
+
+  /* ── header ── */
+  .topbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin-bottom:18px}
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .logo{
+    width:46px;height:46px;flex:0 0 46px;border-radius:15px;
+    background:linear-gradient(150deg,#FFD3DE,#FFBFCB 60%,#FFD9B8);
+    display:grid;place-items:center;font-size:23px;
+    box-shadow:0 8px 18px rgba(249,143,166,.28), inset 0 0 0 2px rgba(255,255,255,.7);
+  }
+  .brand h1{
+    font-family:"Jua","Gowun Dodum",sans-serif;font-weight:400;
+    font-size:clamp(18px,4.6vw,25px);line-height:1.25;margin:0;letter-spacing:-.2px;
+  }
+  .brand .sub{margin:3px 0 0;font-size:12px;color:var(--ink-soft);letter-spacing:.1px}
+  .badge-preview{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:12.5px;font-weight:700;color:#A75B24;
+    background:linear-gradient(180deg,#FFE7CB,#FFDDB8);
+    border:1.5px solid #FFCB96;border-radius:999px;padding:8px 14px;
+    box-shadow:0 5px 14px rgba(247,164,92,.18);
+    white-space:nowrap;
+  }
+  .badge-preview .dot{width:7px;height:7px;border-radius:50%;background:#F7913F;box-shadow:0 0 0 3px rgba(247,145,63,.20);animation:blink 2.4s infinite}
+
+  /* ── layout ── */
+  .layout{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:900px){
+    .layout{grid-template-columns:minmax(0,1.32fr) minmax(0,0.88fr);align-items:start;gap:20px}
+    .col-left,.col-right{display:grid;gap:16px}
+  }
+  .col-left,.col-right{display:grid;gap:16px;min-width:0}
+  .panel{
+    background:rgba(255,255,255,.86);
+    border:1.5px solid var(--line);
+    border-radius:22px;
+    padding:16px;
+    box-shadow:var(--shadow-soft);
+    backdrop-filter:blur(6px);
+  }
+  @media(min-width:760px){ .panel{padding:19px 20px;border-radius:24px} }
+  .panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:13px;flex-wrap:wrap}
+  .panel-head h2{
+    font-family:"Jua",sans-serif;font-weight:400;font-size:17px;margin:0;letter-spacing:.2px;
+    display:flex;align-items:center;gap:7px;
+  }
+  .panel-head .hint{font-size:11.5px;color:var(--ink-soft)}
+
+  /* ── office map ── */
+  .map{position:relative}
+  .rooms{display:grid;grid-template-columns:1fr;gap:12px;position:relative}
+  @media(min-width:560px){ .rooms{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px} }
+  .room{
+    position:relative;display:block;width:100%;height:206px;padding:0;
+    border:2px solid #F4E3D1;border-radius:20px;overflow:hidden;
+    background:linear-gradient(180deg,var(--wall) 0%,#FFEFE0 100%);
+    cursor:pointer;font-family:inherit;color:inherit;text-align:left;
+    transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+  }
+  @media(min-width:560px){ .room{height:224px} }
+  .room:hover{transform:translateY(-3px);box-shadow:0 12px 22px rgba(196,155,118,.16)}
+  .room:focus-visible{outline:none;box-shadow:0 0 0 3px #FFD9AE}
+  .room.active{border-color:#F9B478;box-shadow:0 0 0 3px rgba(249,180,120,.30),0 14px 26px rgba(247,164,92,.16)}
+  .room.active .pill{background:linear-gradient(180deg,#FFE3C6,#FFD3A9);border-color:#F8BC85;color:#9C5518}
+
+  /* wallpaper + floor */
+  .room::before{
+    content:"";position:absolute;inset:0;
+    background-image:radial-gradient(rgba(240,205,175,.55) 1px, transparent 1px);
+    background-size:16px 16px;opacity:.55;pointer-events:none;
+  }
+  .floor{
+    position:absolute;left:0;right:0;bottom:0;height:32%;
+    background:repeating-linear-gradient(90deg,#F0D6B6 0 26px,#E8C9A6 26px 29px);
+    border-top:3px solid #DEBB97;
+    box-shadow:inset 0 6px 10px rgba(196,152,110,.10);
+  }
+  .rug{
+    position:absolute;bottom:6%;left:50%;transform:translateX(-50%);
+    width:60%;height:20%;border-radius:50%;
+    background:radial-gradient(ellipse at center,#FFE9C9,#FFDDB2 70%,#FFD3A0);
+    box-shadow:0 3px 8px rgba(200,155,110,.18);opacity:.95;
+  }
+
+  /* furniture */
+  .desk{
+    position:absolute;left:8%;bottom:22%;width:38%;height:9px;border-radius:4px;
+    background:linear-gradient(180deg,#E7BE96,#D9A87C);
+    box-shadow:0 2px 0 #C8996E;
+  }
+  .desk::before,.desk::after{content:"";position:absolute;bottom:-9px;width:4px;height:9px;background:#D3A077;border-radius:2px}
+  .desk::before{left:4px} .desk::after{right:4px}
+  .monitor{
+    position:absolute;left:calc(8% + 9px);bottom:calc(22% + 9px);
+    width:22px;height:16px;border-radius:3px;
+    background:linear-gradient(160deg,#CBE6F5,#A8D2EC);
+    border:2px solid #B9A594;box-shadow:0 2px 4px rgba(160,120,90,.18);
+  }
+  .cup{
+    position:absolute;left:calc(8% + 36px);bottom:calc(22% + 9px);
+    width:9px;height:11px;border-radius:0 0 4px 4px;background:#F7F0E6;border:1.5px solid #D8C3AC;
+  }
+  .plant{position:absolute;right:9%;bottom:calc(22% + 2px);width:26px;height:30px}
+  .plant .pot{
+    position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+    width:16px;height:12px;border-radius:2px 2px 6px 6px;
+    background:linear-gradient(180deg,#E9A97F,#D89163);
+  }
+  .plant .leaf{position:absolute;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#9ED3B0}
+  .plant .l1{width:13px;height:17px;left:1px;bottom:10px;transform:rotate(-22deg);background:#A8D8B8}
+  .plant .l2{width:12px;height:16px;right:1px;bottom:11px;transform:rotate(20deg);background:#8FCBA6}
+  .plant .l3{width:11px;height:15px;left:8px;bottom:14px;background:#B5DFC3}
+  .window{
+    position:absolute;right:8%;top:16%;width:34%;height:30%;border-radius:6px;
+    background:linear-gradient(180deg,#DCF0FB 0%,#CFE9FA 55%,#E9F6FD 100%);
+    border:3px solid #F6E7D6;box-shadow:0 3px 8px rgba(160,190,210,.20), inset 0 0 0 2px #FBF3EA;
+  }
+  .window::before,.window::after{content:"";position:absolute;background:#F6E7D6}
+  .window::before{left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%)}
+  .window::after{top:50%;left:0;right:0;height:3px;transform:translateY(-50%)}
+  .sunbeam{
+    position:absolute;right:6%;top:34%;width:52%;height:34%;
+    background:linear-gradient(200deg,rgba(255,235,190,.55),rgba(255,235,190,0) 70%);
+    clip-path:polygon(0 0,100% 0,72% 100%,0 78%);pointer-events:none;
+  }
+  .table{
+    position:absolute;left:50%;top:41%;transform:translateX(-50%);
+    width:52%;height:16px;border-radius:50%;
+    background:radial-gradient(ellipse at 50% 30%,#F5DFC4,#E6C6A4);
+    border:2px solid #DBB894;box-shadow:0 4px 8px rgba(190,150,110,.18);
+  }
+  .chair{position:absolute;width:13px;height:10px;border-radius:5px;background:#F3D9C0;border:2px solid #DFBE9B}
+  .chair.c1{left:23%;top:34%} .chair.c2{right:23%;top:34%}
+  .chair.c3{left:29%;top:52%} .chair.c4{right:29%;top:52%}
+  .board{
+    position:absolute;left:9%;top:14%;width:36%;height:24%;border-radius:5px;
+    background:linear-gradient(180deg,#FFFFFF,#F7F2E9);border:2px solid #E6D6C4;
+    box-shadow:0 2px 6px rgba(170,140,110,.12);
+  }
+  .board i{position:absolute;height:2px;border-radius:2px;background:#F4BE8C;display:block}
+  .board i:nth-child(1){left:12%;top:30%;width:58%}
+  .board i:nth-child(2){left:12%;top:50%;width:44%;background:#B9DCC6}
+  .board i:nth-child(3){left:12%;top:70%;width:64%;background:#F5C6D2}
+  .shelf{
+    position:absolute;right:8%;top:15%;width:26%;height:5px;border-radius:2px;
+    background:#E2BE97;box-shadow:0 -11px 0 #E2BE97;
+  }
+  .shelf b{position:absolute;bottom:5px;width:5px;height:10px;border-radius:1px;background:#F0B9C4;display:block}
+  .shelf b:nth-child(1){left:8%;background:#F5C6D2}
+  .shelf b:nth-child(2){left:34%;background:#B9DCC6;height:11px}
+  .shelf b:nth-child(3){left:58%;background:#FFD79E}
+  .papers{
+    position:absolute;right:12%;bottom:calc(22% + 2px);width:20px;height:14px;border-radius:2px;
+    background:#FFFDF8;border:1.5px solid #E3D3C0;
+    box-shadow:2px 2px 0 #FBF4E9, 3px 3px 0 #E9DCCC;
+  }
+  .news{
+    position:absolute;left:11%;bottom:calc(22% + 2px);width:22px;height:15px;border-radius:2px;
+    background:repeating-linear-gradient(180deg,#EDE4D6 0 2px,#FFFCF6 2px 4px);
+    border:1.5px solid #DED0BE;
+  }
+
+  /* room labels */
+  .pill{
+    position:absolute;left:10px;top:10px;z-index:6;
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:11.5px;font-weight:700;color:#8A6242;
+    background:rgba(255,255,255,.92);
+    border:1.5px solid #F0DECB;border-radius:999px;padding:4px 10px;
+    box-shadow:0 2px 6px rgba(190,150,110,.12);
+    transition:background .2s,border-color .2s,color .2s;
+  }
+  .owner{
+    position:absolute;left:10px;bottom:9px;z-index:6;
+    font-size:10.5px;font-weight:700;color:#8D6E52;
+    background:rgba(255,255,255,.88);border:1px solid #F0DECB;border-radius:8px;padding:3px 8px;
+    backdrop-filter:blur(2px);
+    max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .owner.now{background:linear-gradient(180deg,#FFF0DC,#FFE4C6);border-color:#F6C899;color:#A25E20}
+
+  /* ── 하양이 ── */
+  .hayan{
+    position:absolute;left:0;top:0;width:88px;height:96px;z-index:8;pointer-events:none;
+    transform:translate(-9999px,-9999px);
+    transition:transform .85s cubic-bezier(.34,1.06,.36,1);
+    will-change:transform;
+  }
+  @media(min-width:560px){ .hayan{width:96px;height:104px} }
+  .hayan .body-wrap{animation:bob 3.4s ease-in-out infinite;transform-origin:50% 100%}
+  .hayan.walking .body-wrap{animation:walk .42s ease-in-out infinite}
+  .hayan svg{width:100%;height:100%;display:block;overflow:visible}
+
+  .bubble{
+    position:absolute;bottom:calc(100% - 4px);left:50%;
+    transform:translateX(calc(-50% + var(--shift,0px))) scale(.86);transform-origin:50% 100%;
+    width:max-content;max-width:min(196px,72vw);
+    background:#fff;color:var(--ink);
+    border:2px solid #FFD9BC;border-radius:14px;
+    padding:8px 11px;font-size:11.5px;line-height:1.45;font-weight:700;
+    box-shadow:0 8px 18px rgba(190,150,110,.18);
+    opacity:0;transition:opacity .3s ease,transform .3s cubic-bezier(.34,1.4,.5,1);
+    text-align:center;
+  }
+  .bubble.show{opacity:1;transform:translateX(calc(-50% + var(--shift,0px))) scale(1)}
+  .bubble::after{
+    content:"";position:absolute;left:calc(50% - var(--shift,0px));bottom:-7px;width:12px;height:12px;
+    background:#fff;border-right:2px solid #FFD9BC;border-bottom:2px solid #FFD9BC;
+    transform:translateX(-50%) rotate(45deg);border-radius:0 0 3px 0;
+  }
+
+  @keyframes bob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.012,1.028)}}
+  @keyframes walk{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+  .map-foot{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    margin-top:13px;padding-top:12px;border-top:1.5px dashed #F0E0CF;
+    font-size:12px;color:var(--ink-soft);
+  }
+  .map-foot strong{color:#B06A2B;font-weight:700}
+  .map-foot .pin{font-size:13px}
+
+  /* ── participants ── */
+  .people{display:grid;gap:9px}
+  .person{
+    display:flex;align-items:center;gap:11px;
+    background:linear-gradient(180deg,#FFFFFF,#FFFBF6);
+    border:1.5px solid #F5E6D6;border-radius:16px;padding:11px 12px;
+  }
+  .person.head{
+    border-color:#FFD3B0;
+    background:linear-gradient(180deg,#FFF6EC,#FFEEDC);
+    box-shadow:0 6px 16px rgba(247,164,92,.12);
+  }
+  .avatar{
+    width:42px;height:42px;flex:0 0 42px;border-radius:14px;overflow:hidden;
+    background:radial-gradient(circle at 50% 62%,#FFE7CF,#FFDCCB);
+    display:grid;place-items:center;
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,.85), 0 3px 9px rgba(230,170,120,.20);
+  }
+  .avatar svg{width:38px;height:38px}
+  .person .who{min-width:0;flex:1}
+  .person .name{display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;line-height:1.3}
+  .person .name em{font-style:normal;font-size:14px}
+  .person .state{font-size:11.5px;color:var(--ink-soft);margin-top:2px;display:flex;align-items:center;gap:5px}
+  .live{width:6px;height:6px;border-radius:50%;background:#7FD1A8;box-shadow:0 0 0 3px rgba(127,209,168,.20);flex:0 0 6px}
+  .crown{font-size:13px}
+  .slot{
+    display:flex;align-items:center;gap:11px;
+    border:2px dashed #EAD9C6;border-radius:16px;padding:12px;
+    background:repeating-linear-gradient(135deg,rgba(255,250,244,.9) 0 10px,rgba(253,245,236,.9) 10px 20px);
+    color:var(--ink-soft);
+  }
+  .slot .plus{
+    width:42px;height:42px;flex:0 0 42px;border-radius:14px;
+    border:2px dashed #E7D3BC;display:grid;place-items:center;
+    font-size:19px;color:#CDB49A;background:#FFFDFA;
+  }
+  .slot .t{font-size:13px;font-weight:700;color:#A98E77}
+  .slot .s{font-size:11px;margin-top:2px;line-height:1.4}
+  .people-note{
+    font-size:11.5px;color:var(--ink-soft);line-height:1.55;margin:11px 2px 0;
+    padding-top:10px;border-top:1.5px dashed #F0E0CF;
+  }
+
+  /* ── chat ── */
+  .chat{display:flex;flex-direction:column;padding:0;overflow:hidden}
+  .chat-head{
+    display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;
+    padding:15px 17px 13px;border-bottom:1.5px solid #F6E7D7;
+    background:linear-gradient(180deg,#FFFBF5,#FFF7EE);
+  }
+  .chat-head .ttl{display:flex;align-items:center;gap:8px;font-family:"Jua",sans-serif;font-size:16px;font-weight:400}
+  .mini-badge{
+    font-size:10.5px;font-weight:700;color:#A75B24;
+    background:#FFEBD3;border:1px solid #FFD3A2;border-radius:999px;padding:4px 9px;
+    white-space:nowrap;
+  }
+  .messages{
+    padding:15px 14px 6px;display:flex;flex-direction:column;gap:11px;
+    min-height:262px;max-height:min(46vh,420px);overflow-y:auto;
+    scroll-behavior:smooth;
+  }
+  @media(min-width:900px){ .messages{min-height:300px} }
+  .messages::-webkit-scrollbar{width:6px}
+  .messages::-webkit-scrollbar-thumb{background:#EFDFCF;border-radius:99px}
+
+  .sys{
+    align-self:center;text-align:center;font-size:11px;color:#9C8877;line-height:1.6;
+    background:#FBF4EA;border:1px dashed #EFDFCF;border-radius:12px;padding:8px 12px;
+    max-width:92%;
+  }
+  .msg{display:flex;gap:8px;max-width:100%;align-items:flex-end}
+  .msg .b{
+    padding:10px 13px;border-radius:16px;font-size:13px;line-height:1.55;
+    max-width:min(268px,78%);word-break:break-word;white-space:pre-wrap;
+    animation:pop .28s cubic-bezier(.34,1.3,.5,1);
+  }
+  .msg.bot{justify-content:flex-start}
+  .msg.bot .b{
+    background:#FFF3E6;border:1.5px solid #FFDFC0;border-bottom-left-radius:6px;
+    color:#6A5344;box-shadow:0 3px 9px rgba(220,170,120,.10);
+  }
+  .msg.me{justify-content:flex-end}
+  .msg.me .b{
+    background:linear-gradient(165deg,#FFC7D4,#FFB2C4);
+    border:1.5px solid #FBA3B8;border-bottom-right-radius:6px;
+    color:#7A3B4C;font-weight:600;box-shadow:0 3px 10px rgba(249,143,166,.22);
+  }
+  .msg .face{
+    width:28px;height:28px;flex:0 0 28px;border-radius:10px;
+    background:radial-gradient(circle at 50% 60%,#FFE9D3,#FFD9C6);
+    display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px #fff;
+    margin-bottom:2px;
+  }
+  .msg .face svg{width:26px;height:26px}
+  .msg .meta{font-size:10px;color:#B6A493;margin:0 4px 3px;align-self:flex-start}
+  @keyframes pop{from{opacity:0;transform:translateY(6px) scale(.97)}to{opacity:1;transform:none}}
+  .typing{display:flex;gap:4px;align-items:center;padding:12px 14px}
+  .typing i{width:6px;height:6px;border-radius:50%;background:#E3B78D;display:block;animation:typ 1s infinite}
+  .typing i:nth-child(2){animation-delay:.15s} .typing i:nth-child(3){animation-delay:.3s}
+  @keyframes typ{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+
+  .composer{border-top:1.5px solid #F6E7D7;padding:11px 13px 13px;background:linear-gradient(180deg,#FFFBF5,#FFF7EF)}
+  .quick{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px}
+  .chip{
+    font-family:inherit;font-size:11.5px;font-weight:700;color:#A0602A;
+    background:#FFF3E4;border:1.5px solid #FFDDBB;border-radius:999px;
+    padding:6px 11px;cursor:pointer;transition:.18s;
+    display:inline-flex;align-items:center;gap:5px;
+  }
+  .chip:hover{background:#FFE9D1;border-color:#F9C793;transform:translateY(-1px)}
+  .chip:active{transform:translateY(0) scale(.97)}
+  .chip.mention{background:linear-gradient(165deg,#FFDCE4,#FFCEDB);border-color:#FBAFC1;color:#A04660}
+  .chip.mention:hover{background:linear-gradient(165deg,#FFD2DD,#FFC2D2)}
+  .inputrow{display:flex;gap:8px;align-items:flex-end}
+  .inputrow input{
+    flex:1;min-width:0;font-family:inherit;font-size:13.5px;color:var(--ink);
+    background:#fff;border:1.5px solid #F3E1CF;border-radius:14px;
+    padding:12px 14px;outline:none;transition:.18s;
+    box-shadow:inset 0 1px 3px rgba(200,165,130,.07);
+  }
+  .inputrow input::placeholder{color:#BFAE9D}
+  .inputrow input:focus{border-color:#F7C08A;box-shadow:0 0 0 3px rgba(251,193,138,.22)}
+  .send{
+    flex:0 0 46px;width:46px;height:46px;border:none;border-radius:14px;cursor:pointer;
+    background:linear-gradient(165deg,#FFBE8E,#F79A5C);
+    color:#fff;font-size:18px;display:grid;place-items:center;
+    box-shadow:0 6px 14px rgba(247,154,92,.30);transition:.18s;
+  }
+  .send:hover{transform:translateY(-1px);box-shadow:0 9px 18px rgba(247,154,92,.34)}
+  .send:active{transform:scale(.95)}
+  .send svg{width:20px;height:20px}
+  .composer .note{font-size:10.5px;color:#B6A493;margin:8px 2px 0;text-align:center}
+
+  /* hint line for mobile: tap rooms */
+  @media(min-width:900px){
+    .col-right{position:sticky;top:18px}
+  }
+
+  footer{
+    margin-top:22px;text-align:center;font-size:11px;color:#B7A695;line-height:1.7;
+  }
+  footer b{color:#A6805E;font-weight:700}
+
+  @media (prefers-reduced-motion: reduce){
+    .hayan{transition-duration:.01ms}
+    .hayan .body-wrap,.bubble,.msg .b,.typing i,.badge-preview .dot{animation:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🏢</div>
+      <div>
+        <h1>슬기로운에듀라이프 합동 비서실</h1>
+        <p class="sub">Pickle Office · 슬기로운 에듀라이프(주)</p>
+      </div>
+    </div>
+    <div class="badge-preview"><span class="dot"></span>미리보기 모드 (실시간 DB 연결 전)</div>
+  </header>
+
+  <div class="layout">
+
+    <div class="col-left">
+      <!-- 오피스 맵 -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>🗺️ 오피스 맵</h2>
+          <span class="hint">방을 누르면 하양이가 따라와요</span>
+        </div>
+
+        <div class="map" id="map">
+          <div class="rooms">
+            <!-- ① 대표실 -->
+            <button class="room active" data-room="ceo" aria-pressed="true">
+              <span class="pill">① 대표실</span>
+              <div class="sunbeam"></div>
+              <div class="window"></div>
+              <div class="desk"></div>
+              <div class="monitor"></div>
+              <div class="cup"></div>
+              <div class="plant"><span class="leaf l1"></span><span class="leaf l2"></span><span class="leaf l3"></span><span class="pot"></span></div>
+              <div class="rug"></div>
+              <div class="floor"></div>
+              <span class="owner">백승리 대표님</span>
+            </button>
+
+            <!-- ② 회의실 -->
+            <button class="room" data-room="meeting" aria-pressed="false">
+              <span class="pill">② 회의실</span>
+              <div class="board"><i></i><i></i><i></i></div>
+              <div class="chair c1"></div><div class="chair c2"></div>
+              <div class="chair c3"></div><div class="chair c4"></div>
+              <div class="table"></div>
+              <div class="plant"><span class="leaf l1"></span><span class="leaf l2"></span><span class="leaf l3"></span><span class="pot"></span></div>
+              <div class="rug"></div>
+              <div class="floor"></div>
+              <span class="owner">피클 합동 브리핑</span>
+            </button>
+
+            <!-- ③ 작업실 -->
+            <button class="room" data-room="desk" aria-pressed="false">
+              <span class="pill">③ 작업실</span>
+              <div class="shelf"><b></b><b></b><b></b></div>
+              <div class="desk"></div>
+              <div class="monitor"></div>
+              <div class="news"></div>
+              <div class="papers"></div>
+              <div class="rug"></div>
+              <div class="floor"></div>
+              <span class="owner">입찰·서류·뉴스 데스크</span>
+            </button>
+          </div>
+
+          <!-- 하양이 -->
+          <div class="hayan" id="hayan" aria-hidden="true">
+            <div class="bubble" id="bubble">대표님, 대표실에서 대기하고 있어요 ☕</div>
+            <div class="body-wrap">
+              <svg viewBox="0 0 120 132" role="img">
+                <defs>
+                  <radialGradient id="halo" cx="50%" cy="58%" r="50%">
+                    <stop offset="55%" stop-color="#FFC98A" stop-opacity=".55"/>
+                    <stop offset="100%" stop-color="#FFC98A" stop-opacity="0"/>
+                  </radialGradient>
+                  <linearGradient id="bodyG" x1="30%" y1="8%" x2="72%" y2="100%">
+                    <stop offset="0%" stop-color="#FFDCE5"/>
+                    <stop offset="52%" stop-color="#FFC2D0"/>
+                    <stop offset="100%" stop-color="#FBAFC1"/>
+                  </linearGradient>
+                  <linearGradient id="earG" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#FFE9CF"/>
+                    <stop offset="100%" stop-color="#FFD3A6"/>
+                  </linearGradient>
+                </defs>
+                <!-- aura -->
+                <ellipse cx="60" cy="78" rx="58" ry="52" fill="url(#halo)"/>
+                <!-- ears -->
+                <ellipse cx="31" cy="30" rx="13" ry="16.5" fill="url(#earG)" stroke="#F5A567" stroke-width="2.6" transform="rotate(-19 31 30)"/>
+                <ellipse cx="89" cy="30" rx="13" ry="16.5" fill="url(#earG)" stroke="#F5A567" stroke-width="2.6" transform="rotate(19 89 30)"/>
+                <!-- body -->
+                <path d="M60 30c27 0 43 19 43 45 0 26-19 41-43 41s-43-15-43-41c0-26 16-45 43-45Z"
+                      fill="url(#bodyG)" stroke="#F7A45C" stroke-width="3"/>
+                <!-- cheeks -->
+                <ellipse cx="31" cy="84" rx="8" ry="5" fill="#FF9AB0" opacity=".55"/>
+                <ellipse cx="89" cy="84" rx="8" ry="5" fill="#FF9AB0" opacity=".55"/>
+                <!-- eyes -->
+                <ellipse cx="46" cy="70" rx="9.6" ry="11" fill="#FFFFFF" stroke="#F0A875" stroke-width="1.6"/>
+                <ellipse cx="74" cy="70" rx="9.6" ry="11" fill="#FFFFFF" stroke="#F0A875" stroke-width="1.6"/>
+                <circle cx="46.5" cy="72" r="4.4" fill="#6B4A3C"/>
+                <circle cx="74.5" cy="72" r="4.4" fill="#6B4A3C"/>
+                <circle cx="48" cy="70" r="1.5" fill="#fff"/>
+                <circle cx="76" cy="70" r="1.5" fill="#fff"/>
+                <!-- mouth -->
+                <path d="M53 89q7 7 14 0" fill="none" stroke="#F0913F" stroke-width="3" stroke-linecap="round"/>
+                <!-- feet -->
+                <ellipse cx="45" cy="118" rx="9" ry="5" fill="#FFD3A6" stroke="#F5A567" stroke-width="2.2"/>
+                <ellipse cx="75" cy="118" rx="9" ry="5" fill="#FFD3A6" stroke="#F5A567" stroke-width="2.2"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-foot">
+          <span class="pin">📍</span>
+          <span>지금 <strong id="hayanWhere">대표실</strong>에서 <span id="hayanState">대표님 곁에서 대기 중</span></span>
+        </div>
+      </section>
+
+      <!-- 참여 피클 -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>🐣 참여 피클</h2>
+          <span class="hint">1 / 3 명</span>
+        </div>
+        <div class="people">
+          <div class="person head">
+            <div class="avatar">
+              <svg viewBox="0 0 120 132" aria-hidden="true">
+                <ellipse cx="31" cy="30" rx="13" ry="16.5" fill="#FFD3A6" stroke="#F5A567" stroke-width="4" transform="rotate(-19 31 30)"/>
+                <ellipse cx="89" cy="30" rx="13" ry="16.5" fill="#FFD3A6" stroke="#F5A567" stroke-width="4" transform="rotate(19 89 30)"/>
+                <path d="M60 30c27 0 43 19 43 45 0 26-19 41-43 41s-43-15-43-41c0-26 16-45 43-45Z" fill="#FFC2D0" stroke="#F7A45C" stroke-width="4"/>
+                <ellipse cx="46" cy="70" rx="9.6" ry="11" fill="#fff"/><ellipse cx="74" cy="70" rx="9.6" ry="11" fill="#fff"/>
+                <circle cx="46.5" cy="72" r="4.6" fill="#6B4A3C"/><circle cx="74.5" cy="72" r="4.6" fill="#6B4A3C"/>
+                <path d="M53 89q7 7 14 0" fill="none" stroke="#F0913F" stroke-width="4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="who">
+              <div class="name"><span>하양이</span><span class="crown">👑</span><span style="font-size:10.5px;color:#B4854C;background:#FFF0DA;border:1px solid #FFD9AA;border-radius:999px;padding:1px 7px;">메인 비서</span></div>
+              <div class="state"><span class="live"></span><span id="personState">대기 중 · 대표실</span></div>
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="plus">＋</div>
+            <div class="who">
+              <div class="t">초대 대기 슬롯</div>
+              <div class="s">가족·동료 피클 연결 시 합류</div>
+            </div>
+          </div>
+        </div>
+        <p class="people-note">지금은 하양이 혼자 비서실을 지키고 있어요. 가족·동료의 피클이 연결되면 이 자리로 함께 들어옵니다.</p>
+      </section>
+    </div>
+
+    <!-- 채팅 -->
+    <div class="col-right">
+      <section class="panel chat">
+        <div class="chat-head">
+          <div class="ttl">💬 비서실 채팅</div>
+          <span class="mini-badge">미리보기 모드 · 실시간 DB 연결 전</span>
+        </div>
+
+        <div class="messages" id="messages" role="log" aria-live="polite" aria-label="비서실 채팅 미리보기">
+          <div class="sys">여기는 <b>미리보기 채팅</b>이에요. 보내신 메시지는 저장·전송되지 않고, 하양이가 예시 응답만 보여드립니다.</div>
+          <div class="msg bot">
+            <div class="face">
+              <svg viewBox="0 0 120 132" aria-hidden="true">
+                <ellipse cx="31" cy="30" rx="13" ry="16.5" fill="#FFD3A6" stroke="#F5A567" stroke-width="4" transform="rotate(-19 31 30)"/>
+                <ellipse cx="89" cy="30" rx="13" ry="16.5" fill="#FFD3A6" stroke="#F5A567" stroke-width="4" transform="rotate(19 89 30)"/>
+                <path d="M60 30c27 0 43 19 43 45 0 26-19 41-43 41s-43-15-43-41c0-26 16-45 43-45Z" fill="#FFC2D0" stroke="#F7A45C" stroke-width="4"/>
+                <ellipse cx="46" cy="70" rx="9.6" ry="11" fill="#fff"/><ellipse cx="74" cy="70" rx="9.6" ry="11" fill="#fff"/>
+                <circle cx="46.5" cy="72" r="4.6" fill="#6B4A3C"/><circle cx="74.5" cy="72" r="4.6" fill="#6B4A3C"/>
+                <path d="M53 89q7 7 14 0" fill="none" stroke="#F0913F" stroke-width="4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="b">대표님, 비서실에 오신 걸 환영해요 🐣 오늘은 대표실·회의실·작업실 중 어디서 일할까요?</div>
+          </div>
+        </div>
+
+        <div class="composer">
+          <div class="quick">
+            <button class="chip mention" data-fill="@하양이 ">@하양이</button>
+            <button class="chip" data-say="오늘 브리핑 정리해줘">오늘 브리핑</button>
+            <button class="chip" data-say="입찰 진행 상황 알려줘">입찰 진행</button>
+            <button class="chip" data-say="서류 체크해줘">서류 체크</button>
+          </div>
+          <div class="inputrow">
+            <input id="input" type="text" placeholder="@하양이 에게 말을 걸어보세요" autocomplete="off" aria-label="메시지 입력">
+            <button class="send" id="send" aria-label="보내기">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11.5 20 4l-7 16-2.6-6.3L4 11.5Z" fill="#fff"/></svg>
+            </button>
+          </div>
+          <p class="note">미리보기 응답 · 실제 대화는 저장되지 않습니다</p>
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <footer>
+    <b>슬기로운 에듀라이프(주)</b> 합동 비서실 · UI 미리보기 단계<br>
+    실시간 DB(파이어베이스) 연결 전이며, 화면 구성 확인용 페이지입니다.
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ───────── 오피스 맵 ───────── */
+  var ROOMS = {
+    ceo:    { name:"대표실",  bubble:"대표님, 대표실에서 대기하고 있어요 ☕", state:"대표님 곁에서 대기 중" },
+    meeting:{ name:"회의실",  bubble:"회의실이에요! 합동 브리핑 준비 완료 📋", state:"합동 브리핑 준비 중" },
+    desk:   { name:"작업실",  bubble:"작업실에서 입찰·서류·뉴스 정리 중이에요 ✍️", state:"입찰·서류·뉴스 정리 중" }
+  };
+
+  var map     = document.getElementById("map");
+  var hayan   = document.getElementById("hayan");
+  var bubble  = document.getElementById("bubble");
+  var whereEl = document.getElementById("hayanWhere");
+  var stateEl = document.getElementById("hayanState");
+  var pState  = document.getElementById("personState");
+  var rooms   = Array.prototype.slice.call(document.querySelectorAll(".room"));
+
+  var current = "ceo";
+  var anchorX = 0, mapW = 0;
+
+  function place(instant){
+    var el = map.querySelector('.room[data-room="' + current + '"]');
+    if(!el) return;
+    var mr = map.getBoundingClientRect();
+    var rr = el.getBoundingClientRect();
+    if(!rr.width) return;
+    var x = rr.left - mr.left + rr.width / 2;
+    var y = rr.top - mr.top + rr.height * 0.885;
+
+    anchorX = x; mapW = mr.width;
+
+    if(instant) hayan.style.transition = "none";
+    hayan.style.transform = "translate(" + x + "px," + y + "px) translate(-50%,-100%)";
+    if(instant){
+      // force style flush, then re-enable the transition
+      void hayan.offsetWidth;
+      hayan.style.transition = "";
+    }
+    fitBubble();
+  }
+
+  // keep the speech bubble inside the map, tail still pointing at 하양이
+  function fitBubble(){
+    var bw = bubble.offsetWidth || 180;
+    var half = bw / 2 + 4;
+    var shift = 0;
+    if(mapW > 0){
+      if(anchorX < half) shift = half - anchorX;
+      else if(anchorX > mapW - half) shift = (mapW - half) - anchorX;
+    }
+    bubble.style.setProperty("--shift", shift.toFixed(1) + "px");
+  }
+
+  var walkTimer = null;
+  function goTo(key, silent){
+    if(!ROOMS[key]) return;
+    var changed = key !== current;
+    current = key;
+
+    rooms.forEach(function(r){
+      var on = r.getAttribute("data-room") === key;
+      r.classList.toggle("active", on);
+      r.setAttribute("aria-pressed", on ? "true" : "false");
+      var owner = r.querySelector(".owner");
+      if(owner) owner.classList.toggle("now", on);
+    });
+
+    whereEl.textContent = ROOMS[key].name;
+    stateEl.textContent = ROOMS[key].state;
+    pState.textContent = "대기 중 · " + ROOMS[key].name;
+
+    bubble.classList.remove("show");
+    window.setTimeout(function(){
+      bubble.textContent = ROOMS[key].bubble;
+      bubble.classList.add("show");
+      fitBubble();
+    }, changed && !silent ? 340 : 60);
+
+    if(changed && !silent){
+      hayan.classList.add("walking");
+      window.clearTimeout(walkTimer);
+      walkTimer = window.setTimeout(function(){ hayan.classList.remove("walking"); }, 900);
+    }
+
+    place(false);
+  }
+
+  rooms.forEach(function(r){
+    r.addEventListener("click", function(){ goTo(r.getAttribute("data-room")); });
+  });
+
+  // keep the character glued to its room on resize / rotation
+  var resizeTimer = null;
+  function relayout(){
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(function(){ place(true); }, 60);
+  }
+  window.addEventListener("resize", relayout);
+  window.addEventListener("orientationchange", relayout);
+  if(window.ResizeObserver){ new ResizeObserver(relayout).observe(map); }
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ place(true); }); }
+
+  // first paint
+  place(true);
+  window.setTimeout(function(){ bubble.classList.add("show"); fitBubble(); }, 550);
+
+  /* ───────── 미리보기 채팅 ───────── */
+  var messages = document.getElementById("messages");
+  var input    = document.getElementById("input");
+  var sendBtn  = document.getElementById("send");
+  var busy     = false;
+
+  var HAYAN_FACE = '<svg viewBox="0 0 120 132" aria-hidden="true">' +
+    '<ellipse cx="31" cy="30" rx="13" ry="16.5" fill="#FFD3A6" stroke="#F5A567" stroke-width="4" transform="rotate(-19 31 30)"/>' +
+    '<ellipse cx="89" cy="30" rx="13" ry="16.5" fill="#FFD3A6" stroke="#F5A567" stroke-width="4" transform="rotate(19 89 30)"/>' +
+    '<path d="M60 30c27 0 43 19 43 45 0 26-19 41-43 41s-43-15-43-41c0-26 16-45 43-45Z" fill="#FFC2D0" stroke="#F7A45C" stroke-width="4"/>' +
+    '<ellipse cx="46" cy="70" rx="9.6" ry="11" fill="#fff"/><ellipse cx="74" cy="70" rx="9.6" ry="11" fill="#fff"/>' +
+    '<circle cx="46.5" cy="72" r="4.6" fill="#6B4A3C"/><circle cx="74.5" cy="72" r="4.6" fill="#6B4A3C"/>' +
+    '<path d="M53 89q7 7 14 0" fill="none" stroke="#F0913F" stroke-width="4" stroke-linecap="round"/>' +
+    '</svg>';
+
+  function scrollDown(){
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function addUser(text){
+    var row = document.createElement("div");
+    row.className = "msg me";
+    var b = document.createElement("div");
+    b.className = "b";
+    b.textContent = text;
+    row.appendChild(b);
+    messages.appendChild(row);
+    scrollDown();
+  }
+
+  function addBot(text){
+    var row = document.createElement("div");
+    row.className = "msg bot";
+    var face = document.createElement("div");
+    face.className = "face";
+    face.innerHTML = HAYAN_FACE;
+    var b = document.createElement("div");
+    b.className = "b";
+    b.textContent = text;
+    row.appendChild(face);
+    row.appendChild(b);
+    messages.appendChild(row);
+    scrollDown();
+  }
+
+  function showTyping(){
+    var row = document.createElement("div");
+    row.className = "msg bot";
+    row.id = "typingRow";
+    var face = document.createElement("div");
+    face.className = "face";
+    face.innerHTML = HAYAN_FACE;
+    var b = document.createElement("div");
+    b.className = "b typing";
+    b.style.padding = "12px 14px";
+    b.innerHTML = "<i></i><i></i><i></i>";
+    row.appendChild(face);
+    row.appendChild(b);
+    messages.appendChild(row);
+    scrollDown();
+    return row;
+  }
+
+  // keyword → preview answer
+  var RULES = [
+    { k:["안녕","하이","반가","헬로","hello","ㅎㅇ"], a:"안녕하세요, 대표님! 하양이에요 🐣 오늘도 비서실에서 대표님 일을 도울 준비가 되어 있어요." },
+    { k:["브리핑","오늘","일정","스케줄"], a:"오늘 브리핑은 회의실에 모아두었어요. 일정·할 일·날씨를 한 장으로 정리해 드릴게요. (미리보기라 실제 일정은 아직 불러오지 않았어요)" },
+    { k:["입찰","나라장터","공고","견적","제안서"], a:"입찰·공고 건은 작업실 데스크에서 보고 있어요. 마감일과 제출 서류를 먼저 확인해서 알려드릴게요 📋" },
+    { k:["서류","신고","정부24","인증","등기","사업자"], a:"서류는 작업실 서류함에 순서대로 쌓아둘게요. 빠진 서류가 없는지 하나씩 짚어드릴게요 🗂️" },
+    { k:["뉴스","시니어뉴스","블로그","기사"], a:"시니어뉴스 초안은 작업실 뉴스 데스크에서 준비하고 있어요. 오늘 초안부터 보여드릴까요? 📰" },
+    { k:["강의","수업","교육","출강","강사"], a:"강의 일정과 교안은 제가 따로 챙겨둘게요. 출강 전날 준비물 체크도 함께 해드려요 🎓" },
+    { k:["회의","미팅","브리핑룸"], a:"회의실로 안내할게요. 회의가 시작되면 하양이가 회의실에서 기록을 맡을게요." },
+    { k:["고마","감사","수고","잘했"], a:"도움이 되었다니 기뻐요, 대표님 🌸 더 챙길 일 있으면 언제든 불러주세요." },
+    { k:["피클","합동","초대"], a:"지금 비서실에는 하양이 혼자 있어요. 가족·동료 피클이 연결되면 초대 슬롯으로 함께 들어와요 🐣" }
+  ];
+
+  var FALLBACK = [
+    "네, 대표님. 그 건은 제가 맡아서 정리해둘게요. (지금은 미리보기라 실제로 실행되지는 않아요)",
+    "확인했어요! 실시간 연결이 되면 바로 처리하고 결과만 짧게 보고드릴게요.",
+    "말씀 잘 들었어요, 대표님. 필요한 서류와 일정부터 추려서 회의실에 올려둘게요.",
+    "그 일은 작업실 쪽 일감이에요. 우선순위부터 잡아볼까요?"
+  ];
+
+  var fbIndex = 0;
+  function replyFor(text){
+    var t = text.replace(/\s+/g," ").trim().toLowerCase();
+    for(var i=0;i<RULES.length;i++){
+      var r = RULES[i];
+      for(var j=0;j<r.k.length;j++){
+        if(t.indexOf(r.k[j]) > -1) return r.a;
+      }
+    }
+    var out = FALLBACK[fbIndex % FALLBACK.length];
+    fbIndex++;
+    return out;
+  }
+
+  var typingDelay = 620;
+  function send(text){
+    text = String(text || "").replace(/\s+$/,"");
+    if(!text.trim() || busy) return;
+    busy = true;
+    addUser(text);
+    input.value = "";
+
+    var row = showTyping();
+    window.setTimeout(function(){
+      if(row && row.parentNode) row.parentNode.removeChild(row);
+      addBot(replyFor(text));
+      busy = false;
+      if(window.matchMedia && window.matchMedia("(min-width:900px)").matches){ input.focus(); }
+    }, typingDelay);
+
+    // 미리보기에서도 대화 맥락에 따라 방을 옮겨 다님
+    if(/회의|브리핑/.test(text)) goTo("meeting");
+    else if(/입찰|서류|뉴스|작업/.test(text)) goTo("desk");
+    else if(/대표실|대표님|커피/.test(text) && /가|와|로/.test(text)) goTo("ceo");
+  }
+
+  sendBtn.addEventListener("click", function(){ send(input.value); });
+  input.addEventListener("keydown", function(e){
+    if(e.key === "Enter" && !e.isComposing){ e.preventDefault(); send(input.value); }
+  });
+
+  document.querySelectorAll(".chip").forEach(function(c){
+    c.addEventListener("click", function(){
+      var fill = c.getAttribute("data-fill");
+      var say  = c.getAttribute("data-say");
+      if(fill !== null && fill !== undefined){
+        input.value = fill + input.value.replace(/^@하양이\s*/,"");
+        input.focus();
+        try{ input.setSelectionRange(input.value.length, input.value.length); }catch(err){}
+      } else if(say){
+        send(say);
+      }
+    });
+  });
+
+  // keep the chat scrolled to the newest message when the keyboard opens
+  input.addEventListener("focus", function(){ window.setTimeout(scrollDown, 250); });
+})();
+</script>
+</body>
+</html>
